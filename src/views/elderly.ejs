@@ -6,7 +6,12 @@
   <form action="/api/users/requests" method="POST">
     <div class="mb-3">
       <label for="description" class="form-label">Write your request:</label>
-      <textarea id="description" name="description" rows="4" class="form-control" required></textarea>
+      <div class="input-group">
+        <textarea id="description" name="description" rows="4" class="form-control" required></textarea>
+        <button type="button" id="mic-button" class="btn btn-outline-secondary" title="Start Voice Input">
+          🎤
+        </button>
+      </div>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
@@ -28,37 +33,73 @@
   <% } %>
 </ul>
 
+<!-- Optional: Add CSS for active mic button -->
+<style>
+  #mic-button.active {
+    background-color: #dc3545; /* Bootstrap's danger color */
+    color: #fff;
+  }
+</style>
+
+<!-- Speech Recognition Script -->
+<script>
+  // Check for browser compatibility
+  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if ('SpeechRecognition' in window) {
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    const micButton = document.getElementById('mic-button');
+    const descriptionTextarea = document.getElementById('description');
+
+    let isListening = false;
+
+    micButton.addEventListener('click', () => {
+      if (!isListening) {
+        recognition.start();
+      } else {
+        recognition.stop();
+      }
+    });
+
+    recognition.onstart = () => {
+      isListening = true;
+      micButton.classList.add('active');
+      micButton.title = 'Stop Voice Input';
+      micButton.innerHTML = '⏹️'; // Change icon to stop symbol
+    };
+
+    recognition.onend = () => {
+      isListening = false;
+      micButton.classList.remove('active');
+      micButton.title = 'Start Voice Input';
+      micButton.innerHTML = '🎤'; // Revert to microphone icon
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      descriptionTextarea.value += ' ' + transcript;
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error detected: ' + event.error);
+      alert('An error occurred during speech recognition: ' + event.error);
+      isListening = false;
+      micButton.classList.remove('active');
+      micButton.title = 'Start Voice Input';
+      micButton.innerHTML = '🎤';
+    };
+  } else {
+    // Fallback for browsers that do not support SpeechRecognition
+    const micButton = document.getElementById('mic-button');
+    micButton.style.display = 'none'; // Hide the mic button
+    console.warn('Speech Recognition API not supported in this browser.');
+  }
+</script>
+
 <%- include('partials/footer') %>
 
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Elderly Dashboard</title>
-</head>
-<body>
-    <h1>Welcome, <%= user.firstname %>!</h1>
-    <form action="/api/users/requests" method="POST">
-        <label for="description">Write your request:</label>
-        <textarea id="description" name="description" rows="4" cols="50" required></textarea>
-        <button type="submit">Submit</button>
-    </form>    
-
-    <h2>Your Requests</h2>
-<ul>
-    <% if (requests && requests.length > 0) { %>
-        <% requests.forEach(request => { %>
-            <li>
-                <%= request.description %> - <%= request.status %>
-                <% if (request.priority) { %>
-                    <span style="color: red;">(Important)</span>
-                <% } %>
-            </li>
-        <% }) %>
-    <% } else { %>
-        <p>No requests found.</p>
-    <% } %>
-</ul>
-
-</body>
-</html> -->
