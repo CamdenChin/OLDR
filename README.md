@@ -51,9 +51,124 @@ cd OLDR
 ```bash
 npm install
 ```
-**Step 4:** Run the project.
+
+## Database Setup
+
+**Step 1:** Initialize the Database.  
+Run the initialization script to set up the database and create the necessary tables.
 ```bash
-npm start
+cd scripts
+node initDatabase.js
 ```
+
+**Step 2:** Verify Database Creation.  
+Ensure that a `database.db` file is created in the `db/` directory. This file stores all application data.
+
+## Running the Application
+
+**Step 1:** Start the Server.  
+Run one of the following commands:
+
+- **Development Mode (with Nodemon):**  
+  ```bash
+  npm run dev
+  ```
+
+- **Production Mode:**  
+  ```bash
+  npm start
+  ```
+
+**Step 2:** Access the Application.  
+Open your web browser and navigate to:  
+```
+http://localhost:3000
+```
+
+## Project Structure
+
+```
+OLDR/
+├── src/
+│   ├── controllers/
+│   │   └── userController.js
+│   ├── models/
+│   │   └── user.js
+│   ├── routes/
+│   │   └── userRoutes.js
+│   ├── utils/
+│   │   └── dbUtils.js
+│   ├── config/
+│   │   └── database.js
+│   ├── views/
+│   │   ├── partials/
+│   │   │   ├── header.ejs
+│   │   │   └── footer.ejs
+│   │   ├── login.ejs
+│   │   ├── register.ejs
+│   │   ├── staff.ejs
+│   │   └── welcome.ejs
+│   ├── public/
+│   │   └── (static assets like CSS, JS, images)
+│   ├── index.js
+│   └── initDatabase.js
+├── db/
+│   └── database.db
+├── .env
+├── .gitignore
+├── package.json
+└── README.md
+```
+
+## Environment Variables
+
+Create a `.env` file in the root directory of the project and define the following variables:
+
+```env
+SESSION_SECRET=your_secure_session_secret
+PORT=3000
+NODE_ENV=development
+```
+
+## Scripts
+
+**test:** Runs tests using Jest.  
+**start:** Starts the application in production mode.  
+**dev:** Starts the application in development mode using `nodemon`.
+
+## API Testing
+ **Start the Server in Production Mode:**  
+   ```bash
+   npm start
+   ```
+Swagger API documentation available at http://localhost:3000/api-docs
+
+## Deployment
+
+1. **Prepare Environment:** Ensure that all environment variables are set.  
+2. **Deploy to Hosting Provider:** Choose a provider such as Heroku or AWS.  
+3. **Start the Server in Production Mode:**  
+   ```bash
+   npm start
+   ```
+
+## Contributing
+
+1. Fork the repository.  
+2. Create a new branch.  
+3. Make changes and commit them.  
+4. Push to your fork and submit a pull request.
+
+## License
+
+This project is licensed under the [ISC License](https://opensource.org/licenses/ISC).
+
+## Acknowledgments
+
+- [Express.js](https://expressjs.com/): Web framework for Node.js.  
+- [EJS](https://ejs.co/): Templating engine.  
+- [SQLite](https://www.sqlite.org/index.html): Lightweight database.  
+- [Bootstrap](https://getbootstrap.com/): CSS framework.  
+
 
 
